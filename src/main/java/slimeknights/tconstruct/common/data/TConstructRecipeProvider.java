@@ -14,6 +14,7 @@ import net.minecraft.data.RecipeProvider;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.data.ShapelessRecipeBuilder;
 import net.minecraft.data.SingleItemRecipeBuilder;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -27,12 +28,15 @@ import net.minecraftforge.common.crafting.ConditionalAdvancement;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
+import net.minecraftforge.fluids.FluidStack;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.conditions.ConfigOptionEnabledCondition;
+import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.gadgets.TinkerGadgets;
 import slimeknights.tconstruct.gadgets.entity.FrameType;
 import slimeknights.tconstruct.library.materials.MaterialId;
+import slimeknights.tconstruct.library.recipe.fuel.MeltingFuelBuilder;
 import slimeknights.tconstruct.library.recipe.material.MaterialRecipeBuilder;
 import slimeknights.tconstruct.library.recipe.partbuilder.PartRecipeBuilder;
 import slimeknights.tconstruct.library.registration.object.BuildingBlockObject;
@@ -72,6 +76,7 @@ public class TConstructRecipeProvider extends RecipeProvider implements IConditi
     this.addModifierRecipes(consumer);
     this.addMaterialRecipes(consumer);
     this.addSmelteryRecipes(consumer);
+    this.addMeltingRecipes(consumer);
     this.addGadgetRecipes(consumer);
     this.addPartBuilderRecipes(consumer);
     this.addMaterialsRecipes(consumer);
@@ -693,6 +698,13 @@ public class TConstructRecipeProvider extends RecipeProvider implements IConditi
       .patternLine(" # ")
       .addCriterion("has_item", this.hasItem(TinkerSmeltery.searedBrick))
       .build(consumer, location("smeltery/faucet"));
+  }
+
+  private void addMeltingRecipes(Consumer<IFinishedRecipe> consumer) {
+    // fuels
+    MeltingFuelBuilder.fuel(new FluidStack(Fluids.LAVA, 50), 100)
+                      .addCriterion("has_item", hasItem(Items.LAVA_BUCKET))
+                      .build(consumer, location("melting/fuel/lava"));
   }
 
   private void addSlimeRecipes(Consumer<IFinishedRecipe> consumer) {
